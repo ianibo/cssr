@@ -18,24 +18,95 @@
    <div class="container">
      <div class="row">
        <div class="col-lg-12">
-         <h1>CSSR</h1>
+         <h1>CSSR ${school?.source.name}</h1>
+           (
+           <g:link action="report" params="${[la:school.source.laShortcode,sch:school.source.schoolShortcode]}">Fill out a report for this school</g:link> )
+           <a href="">Charter</a> <a href="">nn students</a>
        </div>
      </div>
 
      <div class="row">
        <div class="col-lg-7">
 
-
-         <p>School home ${params}</p>
          <p>
-           ${hits} School: <pre>${school?.source}</pre> <g:link action="report" params="${[la:school.source.laShortcode,sch:school.source.schoolShortcode]}">Report</g:link>
+           ${hits} School: <pre>${school?.source}</pre> 
          </p>
+
+         <dl class="dl-horizontal">
+           <dt>Name</dt>
+           <dd>${school?.source.name}</dd>
+           <dt>From</dt>
+           <dd>${school?.source.statLowAge}</dd>
+           <dt>To</dt>
+           <dd>${school?.source.statHighAge}</dd>
+         </dl>
+
+         <div class="container-fluid">
+
+           <div class="row-fluid">
+             <div class="col-lg-4">
+               <div class="well">Grades...</div>
+             </div>
+             <div class="col-lg-4">
+               <div class="well">SSR...</div>
+             </div>
+             <div class="col-lg-4">
+               <div class="well">Review...</div>
+             </div>
+           </div>
+
+           <div class="row-fluid">
+             <div class="col-lg-4">
+               <div class="well">Student diversity....</div>
+             </div>
+             <div class="col-lg-4 ">
+               <div class="well">Staff....<br/>
+                 <a href="">John smith</a> Teaches at this school
+               </div>
+             </div>
+             <div class="col-lg-4 ">
+               <div class="well">Highlights....</div>
+             </div>
+           </div>
+
+         </div>
+
+         <br/>&nbsp;<br/>&nbsp;<br/>&nbsp;<br/>
+         <div class="container-fluid">
+           <div class="row-fluid">
+             <div class="well">
+               Comments....
+             </div>
+             <div class="well">
+               Comments....
+             </div>
+             <div class="well">
+               Comments....
+             </div>
+             <div class="well">
+               Comments....
+             </div>
+           </div>
+         </div>
+
        </div>
 
        <div class="col-lg-3">
-         <div id="rightpanel" style="float:right; width:250px;border:1px solid black;">
+         <div id="rightpanel" style="width:250px;border:1px solid black;">
            <div id="map" style="width: 250px; height: 250px;"></div>
            <div style="text-align: center; margin-top:15px; width: 250px;"></div>
+         </div>
+
+         <br/>
+
+         <div class="well">
+           Schools nearby
+         </div>
+
+         <br/>
+
+         <div class="well">
+           Some ads maybe
          </div>
        </div>
 
