@@ -28,7 +28,7 @@
 
          <p>School home ${params}</p>
          <p>
-           ${hits} School: <pre>${school?.source}</pre>
+           ${hits} School: <pre>${school?.source}</pre> <g:link action="report" params="${[la:school.source.laShortcode,sch:school.source.schoolShortcode]}">Report</g:link>
          </p>
        </div>
 

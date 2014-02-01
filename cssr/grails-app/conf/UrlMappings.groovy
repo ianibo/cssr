@@ -9,6 +9,7 @@ class UrlMappings {
 
         "/"(controller:'home',action:'index')
         "/$la/$sch"(controller:'home',action:'schhome')
+        "/$la/$sch/report"(controller:'home',action:'report')
 
         "500"(view:'/error')
 	}

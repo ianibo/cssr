@@ -66,6 +66,27 @@ class HomeController {
   def schhome() {
     println("schhome ${params}");
     def result = [:]
+    result.school = getSchool(params.la, params.sch)
+    result
+  }
+
+  def report() {
+    println("schhome ${params}");
+
+    def result = [:]
+    result.school = getSchool(params.la, params.sch)
+    result
+  }
+
+  private String buildQuery(params) {
+    'name:'+params.q
+
+  }
+
+  def getSchool(la, sch) {
+
+    def result = null
+
     org.elasticsearch.groovy.node.GNode esnode = ESWrapperService.getNode()
     org.elasticsearch.groovy.client.GClient esclient = esnode.getClient()
 
@@ -76,7 +97,7 @@ class HomeController {
                            from = params.offset
                            size = params.max
                            query {
-                             query_string (query: 'laShortcode:"'+params.la+'" AND schoolShortcode:"'+params.sch+'"')
+                             query_string (query: 'laShortcode:"'+la+'" AND schoolShortcode:"'+sch+'"')
                            }
                            facets {
                              'Component Type' {
@@ -88,19 +109,10 @@ class HomeController {
                          }
                        }
 
-          result.hits = search.response.hits
-          result.resultsTotal = search.response.hits.totalHits
-
-    if ( result.resultsTotal == 1 ) {
-      println("Got it ${result.hits}");
-      result.school = result.hits[0]
+    if ( search.response.hits.totalHits == 1 ) {
+      result = search.response.hits.hits[0]
     }
 
     result
-  }
-
-  private String buildQuery(params) {
-    'name:'+params.q
-
   }
 }
