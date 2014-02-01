@@ -55,7 +55,7 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX sch-ont: <http://education.data.gov.uk/def/school/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
  
-SELECT ?name ?lat ?lon ?laUri ?laName ?urn ?iip ?admissionsPolicy ?statLowAge ?statHighAge {
+SELECT ?s ?name ?lat ?lon ?laUri ?laName ?urn ?iip ?admissionsPolicy ?statLowAge ?statHighAge {
 ?s a sch-ont:School.
 ?s rdfs:label ?name .
 ?s <http://www.w3.org/2003/01/geo/wgs84_pos#lat> ?lat.
@@ -80,7 +80,26 @@ SELECT ?name ?lat ?lon ?laUri ?laName ?urn ?iip ?admissionsPolicy ?statLowAge ?s
   
       // parse the JSON response object:
       json.results.bindings.each { binding ->
-        println "  binding... ${binding.name}"
+        println "  binding... ${binding.name.value}"
+
+        def idx_record=[
+          _id:binding.uri.value,
+          name:binding.s.value,
+          lat:binding.lat.value,
+          lon:binding.lon.value,
+          laUri:binding.laUri.value,
+          laName:binding.laName.value,
+          statLowAge:binding.statLowAge.value,
+          statHighAge:binding.statHighAge.value
+        ]
+
+        def future = esclient.index {
+          index "cssr"
+          type "school"
+          id idx_record[idx_record._id]
+          source idx_record
+        }
+
       }
     }
  
