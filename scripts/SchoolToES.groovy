@@ -2,7 +2,7 @@
     @Grab(group='net.sourceforge.nekohtml', module='nekohtml', version='1.9.14'),
     @Grab(group='org.codehaus.groovy.modules.http-builder', module='http-builder', version='0.5.1'),
     @Grab(group='xerces', module='xercesImpl', version='2.9.1'),
-    @Grab(group='org.elasticsearch', module='elasticsearch-lang-groovy', version='1.4.0') ])
+    @Grab(group='org.elasticsearch', module='elasticsearch-lang-groovy', version='1.5.0') ])
 
  
 import groovyx.net.http.*
@@ -20,7 +20,9 @@ import org.elasticsearch.groovy.node.GNodeBuilder
 import static org.elasticsearch.groovy.node.GNodeBuilder.* 
  
 def the_base_url = "http://education.data.gov.uk"
-// /sparql/education/query?query=PREFIX+rdf%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0D%0APREFIX+rdfs%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0D%0APREFIX+sch-ont%3A+%3Chttp%3A%2F%2Feducation.data.gov.uk%2Fdef%2Fschool%2F%3E%0D%0APREFIX+xsd%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2001%2FXMLSchema%23%3E%0D%0A%0D%0ASELECT+%3Fname+%3Flat+%3Flon+%3FlaUri+%3FlaName+%3Furn+%3Fiip+%3FadmissionsPolicy+%3FstatLowAge+%3FstatHighAge+%7B%0D%0A%3Fs+a+sch-ont%3ASchool.%0D%0A%3Fs+rdfs%3Alabel+%3Fname+.%0D%0A%3Fs+%3Chttp%3A%2F%2Fwww.w3.org%2F2003%2F01%2Fgeo%2Fwgs84_pos%23lat%3E+%3Flat.%0D%0A%3Fs+%3Chttp%3A%2F%2Fwww.w3.org%2F2003%2F01%2Fgeo%2Fwgs84_pos%23lat%3E+%3Flon.%0D%0A%3Fs+sch-ont%3AlocalAuthority+%3FlaUri+.%0D%0A%3FlaUri+rdfs%3Alabel+%3FlaName.%0D%0A%3Fs+sch-ont%3AuniqueReferenceNumber+%3Furn+.%0D%0A%3Fs+sch-ont%3AinvestorInPeople+%3Fiip.%0D%0A%3Fs+sch-ont%3AadmissionsPolicy+%3FadmissionsPolicy+.%0D%0A%3Fs+sch-ont%3AstatutoryLowAge+%3FstatLowAge+.%0D%0A%3Fs+sch-ont%3AstatutoryHighAge+%3FstatHighAge+.%0D%0A%7D+%0D%0A&output=json&stylesheet=xml-to-html.xsl&force-accept=text%2Fplain"
+
+org.elasticsearch.groovy.common.xcontent.GXContentBuilder.rootResolveStrategy = Closure.DELEGATE_FIRST;
+
  
 GNodeBuilder nodeBuilder = nodeBuilder(); 
 
@@ -41,6 +43,10 @@ println("Stop node");
 node.stop().close() 
  
 def processTopLevel(base_url, esnode) {
+
+  org.elasticsearch.groovy.client.GClient esclient = esnode.getClient()
+  println("client: ${esclient}");
+
 
   println "Loading page"
   def http = new HTTPBuilder( base_url )
@@ -82,24 +88,36 @@ SELECT ?s ?name ?lat ?lon ?laUri ?laName ?urn ?iip ?admissionsPolicy ?statLowAge
       json.results.bindings.each { binding ->
         println "  binding... ${binding.name.value}"
 
+        def la_shortcode=binding.laName.value.trim().toLowerCase().replaceAll("\\p{Punct}","").trim().replaceAll("\\W","_")
+        def school_shortcode=binding.name.value.trim().toLowerCase().replaceAll("\\p{Punct}","").trim().replaceAll("\\W","_")
+
         def idx_record=[
-          _id:binding.uri.value,
-          name:binding.s.value,
+          _id:"sch:${binding.urn.value}",
+          uri:binding.s.value,
+          name:binding.name.value,
           lat:binding.lat.value,
           lon:binding.lon.value,
           laUri:binding.laUri.value,
           laName:binding.laName.value,
           statLowAge:binding.statLowAge.value,
-          statHighAge:binding.statHighAge.value
+          statHighAge:binding.statHighAge.value,
+          laShortcode:la_shortcode,
+          schoolShortcode:school_shortcode
         ]
+
+        println("Indexing ${idx_record}");
 
         def future = esclient.index {
           index "cssr"
           type "school"
-          id idx_record[idx_record._id]
+          id idx_record['_id']
           source idx_record
         }
 
+        future.get()
+
+
+        println("Indexed respidx:${future.response.index}/resptp:${future.response.type}/respid:${future.response.id}")
       }
     }
  
