@@ -65,7 +65,7 @@ SELECT ?s ?name ?lat ?lon ?laUri ?laName ?urn ?iip ?admissionsPolicy ?statLowAge
 ?s a sch-ont:School.
 ?s rdfs:label ?name .
 ?s <http://www.w3.org/2003/01/geo/wgs84_pos#lat> ?lat.
-?s <http://www.w3.org/2003/01/geo/wgs84_pos#lat> ?lon.
+?s <http://www.w3.org/2003/01/geo/wgs84_pos#long> ?lon.
 ?s sch-ont:localAuthority ?laUri .
 ?laUri rdfs:label ?laName.
 ?s sch-ont:uniqueReferenceNumber ?urn .
@@ -126,5 +126,7 @@ SELECT ?s ?name ?lat ?lon ?laUri ?laName ?urn ?iip ?admissionsPolicy ?statLowAge
       println "Unexpected error: ${resp.statusLine.statusCode} : ${resp.statusLine.reasonPhrase}"
     }
   }
+
+  println("Get completed");
 }
  
