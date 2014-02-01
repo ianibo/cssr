@@ -15,10 +15,7 @@
      </div>
      <div class="row">
        <div class="col-lg-12">
-         <g:form>
-           Search: <input name="q" type="text"/>
-           <input type="submit"/>
-         </g:form>
+         <p>School home ${params}</p>
        </div>
      </div>
    </div>

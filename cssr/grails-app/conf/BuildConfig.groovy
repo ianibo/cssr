@@ -53,6 +53,7 @@ grails.project.dependency.resolution = {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes e.g.
         // runtime 'mysql:mysql-connector-java:5.1.27'
         // runtime 'org.postgresql:postgresql:9.3-1100-jdbc41'
+        compile "org.elasticsearch:elasticsearch-lang-groovy:1.5.0"
     }
 
     plugins {
@@ -82,6 +83,7 @@ grails.project.dependency.resolution = {
            excludes 'spring-test'
         }
         compile ":rest:0.8"
+
 
         // Uncomment these (or add new ones) to enable additional resources capabilities
         //runtime ":zipped-resources:1.0.1"
