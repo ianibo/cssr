@@ -16,6 +16,9 @@
      <div class="row">
        <div class="col-lg-12">
          <p>School home ${params}</p>
+         <p>
+           ${hits} School: <pre>${school?.source}</pre>
+         </p>
        </div>
      </div>
    </div>
