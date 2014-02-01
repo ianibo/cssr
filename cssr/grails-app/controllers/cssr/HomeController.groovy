@@ -1,6 +1,13 @@
 package cssr
 
-class HomeController {
+import grails.plugin.springsecurity.annotation.Secured
+import org.codehaus.groovy.grails.commons.GrailsClassUtils
 
-    def index() { }
+class HomeController {
+  
+  def springSecurityService
+
+  // @Secured(['ROLE_USER', 'IS_AUTHENTICATED_FULLY'])
+  def index() { 
+  }
 }
