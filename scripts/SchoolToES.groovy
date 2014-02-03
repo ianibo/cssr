@@ -98,7 +98,7 @@ SELECT ?s ?name ?lat ?lon ?laUri ?laName ?urn ?iip ?admissionsPolicy ?statLowAge
           position:[
             lat:binding.lat.value,
             lon:binding.lon.value,
-          ]
+          ],
           laUri:binding.laUri.value,
           laName:binding.laName.value,
           statLowAge:binding.statLowAge.value,
