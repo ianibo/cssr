@@ -95,8 +95,10 @@ SELECT ?s ?name ?lat ?lon ?laUri ?laName ?urn ?iip ?admissionsPolicy ?statLowAge
           _id:"sch:${binding.urn.value}",
           uri:binding.s.value,
           name:binding.name.value,
-          lat:binding.lat.value,
-          lon:binding.lon.value,
+          position:[
+            lat:binding.lat.value,
+            lon:binding.lon.value,
+          ]
           laUri:binding.laUri.value,
           laName:binding.laName.value,
           statLowAge:binding.statLowAge.value,
